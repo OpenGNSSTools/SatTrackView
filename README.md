@@ -4,7 +4,8 @@ SatTrackView is an interactive web-based visualization tool for tracking GNSS (G
 
 ![image](https://github.com/user-attachments/assets/e01807b2-9beb-4dee-9362-5fc84a4ad602)
 
-![image](https://github.com/user-attachments/assets/312332e6-460a-4f91-8c09-361d0f44cec9)
+![image](https://github.com/user-attachments/assets/92fb4426-c9cb-488a-83f9-dcaa9e254ec7)
+
 
 
 ## Features 🌟
