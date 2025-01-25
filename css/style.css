@@ -1,0 +1,729 @@
+:root {
+    --primary-color: #4CAF50;
+    --primary-dark: #45a049;
+    --text-primary: #333;
+    --text-secondary: #666;
+    --background-light: #f4f4f4;
+    --background-white: #ffffff;
+    --shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    --border-radius: 8px;
+    --spacing-sm: 10px;
+    --spacing-md: 20px;
+    --font-main: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-main);
+    line-height: 1.6;
+    background-color: var(--background-light);
+    color: var(--text-primary);
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--spacing-md);
+}
+
+/* Header Styles */
+header {
+    text-align: center;
+    margin-bottom: var(--spacing-md);
+}
+
+header h1 {
+    color: var(--text-primary);
+    font-size: 2.5rem;
+    margin-bottom: var(--spacing-sm);
+}
+
+.description {
+    color: var(--text-secondary);
+    max-width: 600px;
+    margin: 0 auto;
+    font-size: 1.1rem;
+}
+
+/* Controls Panel */
+.controls-panel {
+    background-color: var(--background-white);
+    padding: var(--spacing-md);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    margin-bottom: var(--spacing-md);
+}
+
+.location-controls, .time-controls {
+    margin-bottom: var(--spacing-md);
+}
+
+h2 {
+    font-size: 1.2rem;
+    margin-bottom: var(--spacing-sm);
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.input-group {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-sm);
+}
+
+.input-field {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+label {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+input[type="text"],
+input[type="datetime-local"] {
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+    width: 100%;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+input[type="text"]:focus,
+input[type="datetime-local"]:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+}
+
+button {
+    padding: 10px 20px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+    font-size: 1rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+button:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-1px);
+}
+
+button:active {
+    transform: translateY(0);
+}
+
+button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+/* Map Container */
+#map {
+    height: 60vh;
+    min-height: 400px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    z-index: 1;
+}
+
+/* Satellite Information Panel */
+.satellite-info {
+    background-color: var(--background-white);
+    padding: var(--spacing-md);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    margin-top: var(--spacing-md);
+}
+
+.info-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--spacing-md);
+}
+
+.satellite-card {
+    background-color: var(--background-light);
+    padding: var(--spacing-md);
+    border-radius: var(--border-radius);
+    border: 1px solid #eee;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.satellite-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    margin-top: var(--spacing-md);
+    padding: var(--spacing-md);
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        padding: var(--spacing-sm);
+    }
+
+    header h1 {
+        font-size: 2rem;
+    }
+
+    .description {
+        font-size: 1rem;
+    }
+
+    .input-group {
+        grid-template-columns: 1fr;
+    }
+
+    #map {
+        height: 50vh;
+    }
+
+    .satellite-card {
+        margin-bottom: var(--spacing-sm);
+    }
+}
+
+@media (max-width: 480px) {
+    header h1 {
+        font-size: 1.8rem;
+    }
+
+    .controls-panel {
+        padding: var(--spacing-sm);
+    }
+
+    button {
+        width: 100%;
+    }
+
+    #map {
+        height: 40vh;
+    }
+}
+
+/* Accessibility Improvements */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        transition: none !important;
+        animation: none !important;
+    }
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+    :root {
+        --primary-color: #006400;
+        --primary-dark: #004d00;
+        --text-primary: #000000;
+        --text-secondary: #1a1a1a;
+    }
+}
+
+.satellite-marker {
+    transition: all 0.2s ease-out;
+}
+
+.satellite-icon {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transform-origin: center center;
+}
+
+.satellite-icon .icon {
+    font-size: 24px;
+    line-height: 1;
+    text-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.elevation-indicator {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 16px;
+    height: 2px;
+    background-color: currentColor;
+    transform-origin: left center;
+    opacity: 0.7;
+}
+
+.satellite-marker.visible {
+    opacity: 1;
+}
+
+.satellite-marker.not-visible {
+    opacity: 0.5;
+    filter: grayscale(100%);
+}
+
+.invalid {
+    border-color: #ff4444 !important;
+    background-color: #fff8f8;
+}
+
+.satellite-card h3 {
+    color: #2c3e50;
+    margin-bottom: 10px;
+    font-size: 1.1em;
+}
+
+.satellite-card .data-grid {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 8px;
+    align-items: center;
+}
+
+.satellite-card .label {
+    font-weight: bold;
+    color: #666;
+}
+
+.satellite-card .value {
+    color: #333;
+}
+
+.no-data {
+    text-align: center;
+    color: #666;
+    font-style: italic;
+}
+
+.status-indicator {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 6px;
+    vertical-align: middle;
+}
+
+.status-visible {
+    background-color: #4CAF50;
+}
+
+.status-not-visible {
+    background-color: #f44336;
+}
+
+/* Popup styles */
+.satellite-popup {
+    padding: 5px;
+}
+
+.satellite-popup h3 {
+    margin: 0 0 10px 0;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #ddd;
+    color: #2c3e50;
+}
+
+.satellite-popup h4 {
+    margin: 0 0 5px 0;
+    color: #666;
+    font-size: 0.9em;
+}
+
+.popup-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.popup-section {
+    font-size: 0.9em;
+}
+
+.popup-section p {
+    margin: 3px 0;
+    color: #444;
+}
+
+.status {
+    font-weight: bold;
+    padding: 2px 6px;
+    border-radius: 3px;
+    display: inline-block;
+}
+
+.status.visible {
+    background-color: rgba(76, 175, 80, 0.2);
+    color: #2e7d32;
+}
+
+.status.not-visible {
+    background-color: rgba(244, 67, 54, 0.2);
+    color: #c62828;
+}
+
+/* Remove the existing hover transform and add this new one */
+.leaflet-marker-icon.satellite-marker:hover {
+    z-index: 1000;
+    filter: brightness(1.2);
+}
+
+/* Ensure proper positioning of markers */
+.leaflet-marker-icon {
+    margin-left: -12px !important;
+    margin-top: -12px !important;
+}
+
+/* Loading and Error States */
+.loading-message,
+.error-message {
+    text-align: center;
+    padding: var(--spacing-md);
+    background-color: var(--background-white);
+    border-radius: var(--border-radius);
+}
+
+.spinner {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    border: 3px solid var(--background-light);
+    border-radius: 50%;
+    border-top-color: var(--primary-color);
+    animation: spin 1s linear infinite;
+    margin-bottom: var(--spacing-sm);
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.error-message {
+    text-align: center;
+    color: #d32f2f;
+}
+
+.retry-button {
+    margin-left: var(--spacing-sm);
+    padding: 5px 10px;
+    background-color: #d32f2f;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.retry-button:hover {
+    background-color: #b71c1c;
+}
+
+/* Satellite Group Selection */
+#satellite-group {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: var(--spacing-md);
+    border: 1px solid #ddd;
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    background-color: var(--background-white);
+}
+
+#satellite-group:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+}
+
+/* GNSS Satellite Group Colors */
+.satellite-card[data-group="gps"] .status-indicator.status-visible {
+    background-color: #4CAF50;
+}
+
+.satellite-card[data-group="glonass"] .status-indicator.status-visible {
+    background-color: #2196F3;
+}
+
+.satellite-card[data-group="galileo"] .status-indicator.status-visible {
+    background-color: #FFC107;
+}
+
+.satellite-card[data-group="beidou"] .status-indicator.status-visible {
+    background-color: #F44336;
+}
+
+/* Group Selection Styling */
+#satellite-group {
+    background-image: url("data:image/svg+xml,...");
+    background-repeat: no-repeat;
+    background-position: right 0.7em top 50%;
+    background-size: 0.65em auto;
+    padding-right: 2em;
+}
+
+.gnss-legend {
+    background: white;
+    padding: 10px;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin: 10px;
+    font-size: 0.9em;
+}
+
+.gnss-legend-item {
+    display: flex;
+    align-items: center;
+    margin: 5px 0;
+}
+
+.gnss-legend-color {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+
+.constellation-filter {
+    margin-top: 15px;
+    padding: 10px;
+    background: #f5f5f5;
+    border-radius: var(--border-radius);
+}
+
+.filter-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 8px;
+}
+
+.filter-options label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+}
+
+.constellation-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.85em;
+    white-space: nowrap;
+    text-align: center;
+}
+
+.constellation-badge.gps { background-color: rgba(76, 175, 80, 0.2); color: #2e7d32; }
+.constellation-badge.glonass { background-color: rgba(33, 150, 243, 0.2); color: #1565c0; }
+.constellation-badge.galileo { background-color: rgba(255, 193, 7, 0.2); color: #f57f17; }
+.constellation-badge.beidou { background-color: rgba(244, 67, 54, 0.2); color: #c62828; }
+
+/* Tablo Stilleri - Güncelleme */
+#satellite-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: white;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    table-layout: fixed;
+}
+
+#satellite-table thead {
+    background-color: var(--primary-color);
+}
+
+#satellite-table th {
+    background-color: var(--primary-color);
+    color: white;
+    font-weight: 600;
+    padding: 12px 15px;
+    text-align: left;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+#satellite-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+    background-color: white; /* Arka plan rengini beyaz yap */
+}
+
+/* Sütun genişliklerini sabit tut */
+#satellite-table th:nth-child(1),
+#satellite-table td:nth-child(1) { width: 120px; }
+
+#satellite-table th:nth-child(2),
+#satellite-table td:nth-child(2) { width: 220px; }
+
+#satellite-table th:nth-child(3),
+#satellite-table td:nth-child(3) { width: 140px; }
+
+#satellite-table th:nth-child(4),
+#satellite-table td:nth-child(4) { width: 100px; }
+
+#satellite-table th:nth-child(5),
+#satellite-table td:nth-child(5) { width: 160px; }
+
+/* Tablo container'ı için yatay kaydırma */
+.info-container {
+    overflow-x: auto;
+    padding: 0;
+    border-radius: var(--border-radius);
+    background-color: white;
+}
+
+/* Satır hover efekti */
+#satellite-table tbody tr:hover td {
+    background-color: #f8f9fa;
+}
+
+/* Görünmez satırları tamamen gizle */
+#satellite-table tr[style*="display: none"] {
+    display: none !important;
+}
+
+/* Lejant Stilleri */
+.leaflet-control-legend {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.4);
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    margin: 5px 0;
+}
+
+.legend-color {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+
+/* Slider stilleri */
+#time-slider {
+    width: 100%;
+    margin: 10px 0;
+    -webkit-appearance: none;
+    height: 8px;
+    border-radius: 4px;
+    background: #ddd;
+    outline: none;
+}
+
+#time-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+#time-slider::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    cursor: pointer;
+    transition: background-color 0.2s;
+    border: none;
+}
+
+#time-slider::-webkit-slider-thumb:hover {
+    background: var(--primary-dark);
+}
+
+#time-slider::-moz-range-thumb:hover {
+    background: var(--primary-dark);
+}
+
+#time-display {
+    font-family: monospace;
+    font-size: 1.1em;
+    color: var(--text-primary);
+}
+
+/* Time Controls Layout */
+.time-controls {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.time-controls h2 {
+    margin-bottom: var(--spacing-sm);
+}
+
+.time-inputs {
+    display: grid;
+    grid-template-columns: 200px 1fr;  /* Date 200px, Time kalan alan */
+    gap: var(--spacing-md);
+    align-items: center;
+}
+
+/* Date Picker Styles */
+#date-picker {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+}
+
+#date-picker:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+}
+
+/* Time Slider Container */
+.time-slider-container {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .time-inputs {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-sm);
+    }
+} 

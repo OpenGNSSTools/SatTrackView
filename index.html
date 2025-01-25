@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Track and visualize satellites in real-time with interactive map controls">
+    <title>SatTrackView - Satellite Tracking Visualization</title>
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>SatTrackView</h1>
+            <p class="description">Interactive satellite tracking visualization tool. Select a time to view satellite positions and trajectories.</p>
+        </header>
+        
+        <main>
+            <div class="controls-panel" role="form" aria-label="Tracking Controls">
+                <div class="time-controls">
+                    <h2>Observation Time</h2>
+                    <div class="time-inputs">
+                        <div class="input-field">
+                            <label for="date-picker">Date</label>
+                            <input type="date" 
+                                   id="date-picker" 
+                                   name="date-picker"
+                                   aria-label="Select observation date">
+                        </div>
+                        <div class="time-slider-container">
+                            <label for="time-slider">Time: <span id="time-display">00:00</span></label>
+                            <input type="range" 
+                                   id="time-slider" 
+                                   min="0" 
+                                   max="1440" 
+                                   value="0"
+                                   step="1"
+                                   aria-label="Select time">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="map" 
+                 role="application" 
+                 aria-label="Interactive satellite tracking map"
+                 tabindex="0">
+            </div>
+
+            <div class="satellite-info" id="satellite-info">
+                <h2>Satellite Information</h2>
+                <div class="info-container">
+                    <table id="satellite-table">
+                        <thead>
+                            <tr>
+                                <th>Status</th>
+                                <th>Satellite</th>
+                                <th>Constellation</th>
+                                <th>Elevation</th>
+                                <th>Azimuth</th>
+                            </tr>
+                        </thead>
+                        <tbody id="satellite-details">
+                            <tr class="no-data">
+                                <td colspan="5">Select a location to view satellite information</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>Data provided by satellite tracking APIs. Map © OpenStreetMap contributors</p>
+        </footer>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <!-- Satellite.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/satellite.js/4.1.3/satellite.min.js"></script>
+    
+    <!-- Custom JS -->
+    <script src="js/app.js"></script>
+</body>
+</html> 
