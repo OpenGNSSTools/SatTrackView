@@ -29,11 +29,11 @@ SatTrackView is an interactive web-based visualization tool for tracking GNSS (G
   - Manual coordinate input
   - Current location detection
   - Map click selection
-- **Satellite Visibility Calculation**: Based on observer position
-- **Elevation and Azimuth Angle Display**:
-- **Time-based Position Simulation**:
-- **Responsive Design**:
-- **Dark Mode Interface**:
+- **Satellite Visibility Calculation**: Based on observer position and satellite elevation angle
+- **Elevation and Azimuth Angle Display**: Real-time calculation and display of satellite elevation and azimuth angles relative to observer
+- **Time-based Position Simulation**: Ability to simulate satellite positions at any date/time
+- **Responsive Design**: Optimized layout for desktop, tablet and mobile devices
+- **Dark Mode Interface**: Eye-friendly dark theme for comfortable nighttime viewing
 
 ## Usage
 
