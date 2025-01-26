@@ -19,9 +19,11 @@ class SatTrackView {
             latitude: 39.9334, 
             longitude: 32.8597 
         };
+        this.isPickingLocation = false;
         
         this.initializeMap();
         this.setupEventListeners();
+        this.setupLocationControls();
         this.loadAllGNSSSatellites(); // Load all GNSS satellites at start
     }
 
@@ -82,23 +84,16 @@ class SatTrackView {
             draggable: true
         }).addTo(this.map);
 
-        // Add popup with coordinates
-        this.currentMarker.bindPopup(
-            `<b>${description}</b><br>` +
-            `Lat: ${latitude.toFixed(6)}<br>` +
-            `Lon: ${longitude.toFixed(6)}`
-        ).openPopup();
-
         // Handle marker drag events to update input fields
         this.currentMarker.on('dragend', (event) => {
             const marker = event.target;
             const position = marker.getLatLng();
+            this.observerPosition = { 
+                latitude: position.lat, 
+                longitude: position.lng 
+            };
             this.updateInputFields(position.lat, position.lng);
-            marker.setPopupContent(
-                `<b>Selected Location</b><br>` +
-                `Lat: ${position.lat.toFixed(6)}<br>` +
-                `Lon: ${position.lng.toFixed(6)}`
-            );
+            this.loadAllGNSSSatellites();
         });
 
         // Pan map to new location
@@ -110,10 +105,138 @@ class SatTrackView {
         document.getElementById('longitude').value = longitude.toFixed(6);
     }
 
+    setupLocationControls() {
+        // Set Coordinates button
+        document.getElementById('set-coordinates').addEventListener('click', () => {
+            const latInput = document.getElementById('latitude');
+            const lonInput = document.getElementById('longitude');
+            const lat = parseFloat(latInput.value);
+            const lon = parseFloat(lonInput.value);
+            
+            try {
+                if (this.validateCoordinates(lat, lon)) {
+                    this.observerPosition = { latitude: lat, longitude: lon };
+                    this.updateLocation(lat, lon);
+                    this.loadAllGNSSSatellites();
+                    this.showLocationFeedback('Location set successfully!', 'success');
+                    
+                    // Clear any previous error states
+                    latInput.classList.remove('invalid');
+                    lonInput.classList.remove('invalid');
+                }
+            } catch (error) {
+                this.showLocationFeedback(error.message, 'error');
+                
+                // Show which input is invalid
+                if (isNaN(lat) || lat < -90 || lat > 90) {
+                    latInput.classList.add('invalid');
+                }
+                if (isNaN(lon) || lon < -180 || lon > 180) {
+                    lonInput.classList.add('invalid');
+                }
+            }
+        });
+
+        // Use Current Location button
+        document.getElementById('use-current-location').addEventListener('click', () => {
+            if ("geolocation" in navigator) {
+                this.showLocationFeedback('Getting your location...', 'info');
+                
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const lat = position.coords.latitude;
+                        const lon = position.coords.longitude;
+                        this.observerPosition = { latitude: lat, longitude: lon };
+                        this.updateLocation(lat, lon);
+                        this.loadAllGNSSSatellites();
+                        
+                        // Update input fields
+                        document.getElementById('latitude').value = lat.toFixed(6);
+                        document.getElementById('longitude').value = lon.toFixed(6);
+                        
+                        this.showLocationFeedback('Location set to your current position!', 'success');
+                    },
+                    (error) => {
+                        this.showLocationFeedback(`Error getting location: ${error.message}`, 'error');
+                    }
+                );
+            } else {
+                this.showLocationFeedback('Geolocation is not supported by your browser', 'error');
+            }
+        });
+
+        // Pick on Map button
+        const pickButton = document.getElementById('pick-on-map');
+        pickButton.addEventListener('click', () => {
+            this.isPickingLocation = !this.isPickingLocation;
+            
+            if (this.isPickingLocation) {
+                document.getElementById('map').classList.add('crosshair-cursor');
+                pickButton.textContent = 'Cancel Selection';
+                pickButton.classList.add('picking-location');
+                this.showLocationFeedback('Click anywhere on the map to set location', 'info');
+            } else {
+                this.cancelLocationPicking();
+            }
+        });
+
+        // Map click handler
+        this.map.on('click', (e) => {
+            if (this.isPickingLocation) {
+                const lat = e.latlng.lat;
+                const lon = e.latlng.lng;
+                
+                this.observerPosition = { latitude: lat, longitude: lon };
+                this.updateLocation(lat, lon);
+                this.loadAllGNSSSatellites();
+                
+                // Update input fields
+                document.getElementById('latitude').value = lat.toFixed(6);
+                document.getElementById('longitude').value = lon.toFixed(6);
+                
+                this.showLocationFeedback('Location selected from map!', 'success');
+                this.cancelLocationPicking();
+            }
+        });
+    }
+
+    // Helper method to cancel location picking mode
+    cancelLocationPicking() {
+        this.isPickingLocation = false;
+        document.getElementById('map').classList.remove('crosshair-cursor');
+        const pickButton = document.getElementById('pick-on-map');
+        pickButton.innerHTML = '<i class="fas fa-map-marker-alt"></i> Pick on Map';
+        pickButton.classList.remove('picking-location');
+    }
+
+    // Helper method to show location feedback
+    showLocationFeedback(message, type) {
+        const feedbackDiv = document.querySelector('.location-feedback') || 
+                           document.createElement('div');
+        feedbackDiv.className = `location-feedback ${type}`;
+        feedbackDiv.textContent = message;
+        
+        if (!document.querySelector('.location-feedback')) {
+            document.querySelector('.location-controls').appendChild(feedbackDiv);
+        }
+        
+        // Auto-hide success messages after 3 seconds
+        if (type === 'success') {
+            setTimeout(() => {
+                feedbackDiv.style.display = 'none';
+            }, 3000);
+        }
+    }
+
     async loadAllGNSSSatellites() {
         try {
+            // Clear existing data
             this.satellites.clear();
             this.clearSatelliteMarkers();
+            
+            // Show loading state
+            const container = document.getElementById('satellite-details');
+            container.innerHTML = '<tr><td colspan="6">Loading satellite data...</td></tr>';
 
             // Fetch data for all GNSS constellations
             const allSatellites = await Promise.all(

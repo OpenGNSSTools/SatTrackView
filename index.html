@@ -20,7 +20,23 @@
         </header>
         
         <main>
-            <div class="controls-panel" role="form" aria-label="Tracking Controls">
+            <section class="controls-panel">
+                <div class="location-controls">
+                    <h3>Observer Location</h3>
+                    <div class="input-group">
+                        <input type="number" id="latitude" placeholder="Latitude" step="any">
+                        <input type="number" id="longitude" placeholder="Longitude" step="any">
+                        <button id="set-coordinates">Set Coordinates</button>
+                    </div>
+                    <div class="location-buttons">
+                        <button id="use-current-location">
+                            <i class="fas fa-location-arrow"></i> Use Current Location
+                        </button>
+                        <button id="pick-on-map">
+                            <i class="fas fa-map-marker-alt"></i> Pick on Map
+                        </button>
+                    </div>
+                </div>
                 <div class="time-controls">
                     <h2>Observation Time</h2>
                     <div class="time-inputs">
@@ -43,7 +59,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </section>
 
             <div id="map" 
                  role="application" 

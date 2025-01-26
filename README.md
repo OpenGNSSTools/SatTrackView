@@ -19,6 +19,51 @@ SatTrackView is an interactive web-based visualization tool for tracking GNSS (G
 - **Filtering Options**: Filter satellites by constellation
 - **Color-coded Visualization**: Each constellation has a unique color for easy identification
 - **Detailed Satellite Data**: Comprehensive information table for all visible satellites
+- **Multiple Location Selection Methods**:
+  - Manual coordinate input
+  - Current location detection
+  - Map click selection
+- **Satellite Visibility Calculation**: Based on observer position
+- **Elevation and Azimuth Angle Display**:
+- **Time-based Position Simulation**:
+- **Responsive Design**:
+- **Dark Mode Interface**:
+
+## Usage
+
+1. Select your observation location using one of these methods:
+   - Enter coordinates manually
+   - Use your current location
+   - Click on the map to select a location
+2. Choose the date and time for satellite positions
+3. View satellite information in the table below the map
+4. Filter satellites by constellation using the checkboxes
+
+## Installation
+
+No installation required. Simply visit [https://opengnsstools.github.io/SatTrackView](https://opengnsstools.github.io/SatTrackView)
+
+## Development
+
+To run locally:
+
+1. Clone the repository
+2. Open index.html in your browser
+3. No build process required - uses vanilla JavaScript
+
+## Dependencies
+
+- Leaflet.js for map visualization
+- Satellite.js for orbital calculations
+- Font Awesome for icons
+
+## License
+
+MIT License - see LICENSE file for details
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## Technologies Used 💻
 
