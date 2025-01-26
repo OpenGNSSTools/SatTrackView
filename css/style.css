@@ -48,18 +48,21 @@ body {
     max-width: 1200px;
     margin: 0 auto;
     padding: var(--spacing-md);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 /* Header Styles */
 header {
     text-align: center;
-    margin-bottom: var(--spacing-md);
-    padding: var(--spacing-md) 0;
+    margin-bottom: var(--spacing-sm);
+    padding: var(--spacing-sm) 0;
 }
 
 header h1 {
     color: var(--text-primary);
-    font-size: 2.5rem;
+    font-size: 2rem;
     margin-bottom: var(--spacing-sm);
     font-weight: 700;
 }
@@ -68,32 +71,33 @@ header h1 {
     color: var(--text-secondary);
     max-width: 600px;
     margin: 0 auto;
-    font-size: 1.1rem;
+    font-size: 1rem;
+    margin-bottom: var(--spacing-sm);
 }
 
 /* Controls Panel */
 .controls-panel {
     background-color: var(--background-card);
-    padding: var(--spacing-md);
+    padding: var(--spacing-sm);
     border-radius: var(--border-radius);
     box-shadow: var(--shadow);
-    margin-bottom: var(--spacing-md);
+    margin-bottom: var(--spacing-sm);
     border: 1px solid var(--border-color);
 }
 
 /* Location Controls */
 .location-controls {
     background: var(--background-card);
-    padding: var(--spacing-md);
+    padding: var(--spacing-sm);
     border-radius: var(--border-radius);
-    margin-bottom: var(--spacing-md);
+    margin-bottom: var(--spacing-sm);
     border: 1px solid var(--border-color);
 }
 
 .location-controls h3 {
     color: var(--text-primary);
-    font-size: 1.2rem;
-    margin-bottom: var(--spacing-md);
+    font-size: 1.1rem;
+    margin-bottom: var(--spacing-sm);
     font-weight: 600;
 }
 
@@ -106,12 +110,12 @@ header h1 {
 
 .input-group input {
     flex: 1;
-    padding: 0.75rem;
+    padding: 0.5rem;
     border: 1px solid var(--border-color);
     border-radius: var(--border-radius);
     background: var(--background-input);
     color: var(--text-primary);
-    font-size: 1rem;
+    font-size: 0.9rem;
 }
 
 .input-group input:focus {
@@ -122,13 +126,13 @@ header h1 {
 
 /* Button Styles */
 button {
-    padding: 0.75rem 1.5rem;
+    padding: 0.5rem 1rem;
     background-color: var(--primary-color);
     color: white;
     border: none;
     border-radius: var(--border-radius);
     cursor: pointer;
-    font-size: 1rem;
+    font-size: 0.9rem;
     font-weight: 500;
     transition: all 0.2s ease;
     display: flex;
@@ -154,27 +158,27 @@ button:hover {
 /* Time Controls */
 .time-controls {
     background: var(--background-card);
-    padding: var(--spacing-md);
+    padding: var(--spacing-sm);
     border-radius: var(--border-radius);
     border: 1px solid var(--border-color);
 }
 
 .time-controls h2 {
     color: var(--text-primary);
-    font-size: 1.2rem;
-    margin-bottom: var(--spacing-md);
+    font-size: 1.1rem;
+    margin-bottom: var(--spacing-sm);
     font-weight: 600;
 }
 
 /* Date Picker & Time Slider */
 #date-picker {
     width: 100%;
-    padding: 0.75rem;
+    padding: 0.5rem;
     border: 1px solid var(--border-color);
     border-radius: var(--border-radius);
     background: var(--background-input);
     color: var(--text-primary);
-    font-size: 1rem;
+    font-size: 0.9rem;
 }
 
 #time-slider {
@@ -230,20 +234,22 @@ button:hover {
     background-color: var(--background-input);
     color: var(--text-primary);
     font-weight: 600;
-    padding: 12px 15px;
+    padding: 8px 12px;
     text-align: left;
     position: sticky;
     top: 0;
     z-index: 10;
     border-bottom: 1px solid var(--border-color);
+    font-size: 0.9rem;
 }
 
 #satellite-table td {
-    padding: 12px 15px;
+    padding: 8px 12px;
     text-align: left;
     border-bottom: 1px solid var(--border-color);
     background-color: var(--background-card);
     color: var(--text-secondary);
+    font-size: 0.9rem;
 }
 
 /* Sütun genişliklerini sabit tut */
@@ -403,8 +409,8 @@ input[type="checkbox"] {
 
 /* Map Container */
 #map {
-    height: 60vh;
-    min-height: 400px;
+    height: 50vh;
+    min-height: 300px;
     border-radius: var(--border-radius);
     border: 1px solid var(--border-color);
     box-shadow: var(--shadow);
@@ -413,7 +419,7 @@ input[type="checkbox"] {
 /* Legend */
 .leaflet-control-legend {
     background: var(--background-card);
-    padding: var(--spacing-md);
+    padding: 10px;
     border-radius: var(--border-radius);
     border: 1px solid var(--border-color);
 }
@@ -421,15 +427,44 @@ input[type="checkbox"] {
 .leaflet-control-legend h4 {
     color: var(--text-primary);
     margin-bottom: 8px;
-    font-weight: 600;
+    font-size: 0.9rem;
 }
 
 .legend-item {
+    display: flex;
+    align-items: center;
+    margin: 5px 0;
     color: var(--text-secondary);
 }
 
+.legend-color {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Lejant renkleri */
+.legend-item:nth-child(1) .legend-color { background-color: var(--gps-color); }
+.legend-item:nth-child(2) .legend-color { background-color: var(--glonass-color); }
+.legend-item:nth-child(3) .legend-color { background-color: var(--galileo-color); }
+.legend-item:nth-child(4) .legend-color { background-color: var(--beidou-color); }
+
 /* Responsive Design */
 @media (max-width: 768px) {
+    .container {
+        padding: var(--spacing-sm);
+    }
+
+    header h1 {
+        font-size: 1.8rem;
+    }
+
+    #map {
+        height: 40vh;
+    }
+
     .time-inputs {
         grid-template-columns: 1fr;
     }
@@ -768,7 +803,7 @@ input[type="checkbox"] {
 .time-slider-container {
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: 3px;
 }
 
 /* Responsive Design */
@@ -791,7 +826,7 @@ input[type="checkbox"] {
 }
 
 .picking-location {
-    background-color: #f44336 !important;
+    background-color: var(--beidou-color) !important;
     color: white;
 }
 
@@ -815,4 +850,21 @@ input[type="checkbox"] {
     background-color: rgba(244, 67, 54, 0.1);
     color: #f44336;
     border: 1px solid #f44336;
+}
+
+/* Konum seçimi sırasındaki imleç stili */
+.picking-location-cursor {
+    cursor: crosshair !important;
+    position: relative;
+}
+
+.picking-location-cursor::before {
+    content: '⌖';  /* Alternatif karakterler: ⊕ ⌖ ⊙ */
+    position: fixed;
+    font-size: 24px;
+    color: var(--primary-color);
+    text-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+    pointer-events: none;
+    z-index: 1000;
+    transform: translate(-50%, -50%);
 } 

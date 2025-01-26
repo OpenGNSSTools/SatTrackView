@@ -171,10 +171,13 @@ class SatTrackView {
             this.isPickingLocation = !this.isPickingLocation;
             
             if (this.isPickingLocation) {
-                document.getElementById('map').classList.add('crosshair-cursor');
+                document.getElementById('map').classList.add('picking-location-cursor');
                 pickButton.textContent = 'Cancel Selection';
                 pickButton.classList.add('picking-location');
                 this.showLocationFeedback('Click anywhere on the map to set location', 'info');
+                
+                // Mouse takibi için event listener ekle
+                this.map.getContainer().addEventListener('mousemove', this.updatePickerPosition);
             } else {
                 this.cancelLocationPicking();
             }
@@ -200,13 +203,25 @@ class SatTrackView {
         });
     }
 
+    // Picker pozisyonunu güncelle
+    updatePickerPosition = (e) => {
+        const cursor = document.querySelector('.picking-location-cursor::before');
+        if (cursor) {
+            cursor.style.left = `${e.clientX}px`;
+            cursor.style.top = `${e.clientY}px`;
+        }
+    }
+
     // Helper method to cancel location picking mode
     cancelLocationPicking() {
         this.isPickingLocation = false;
-        document.getElementById('map').classList.remove('crosshair-cursor');
+        document.getElementById('map').classList.remove('picking-location-cursor');
         const pickButton = document.getElementById('pick-on-map');
         pickButton.innerHTML = '<i class="fas fa-map-marker-alt"></i> Pick on Map';
         pickButton.classList.remove('picking-location');
+        
+        // Mouse takip event listener'ını kaldır
+        this.map.getContainer().removeEventListener('mousemove', this.updatePickerPosition);
     }
 
     // Helper method to show location feedback
