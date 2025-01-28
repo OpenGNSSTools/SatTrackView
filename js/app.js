@@ -251,7 +251,37 @@ class SatTrackView {
             
             // Show loading state
             const container = document.getElementById('satellite-details');
-            container.innerHTML = '<tr><td colspan="6">Loading satellite data...</td></tr>';
+            if (!document.getElementById('satellite-table')) {
+                // Tablo daha önce oluşturulmamışsa oluştur
+                container.innerHTML = `
+                    <div class="satellite-table-container">
+                        <table id="satellite-table">
+                            <thead>
+                                <tr>
+                                    <th>Status</th>
+                                    <th>Satellite Name</th>
+                                    <th>Constellation</th>
+                                    <th>Elevation</th>
+                                    <th>Azimuth</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="loading-row">
+                                    <td colspan="5">Loading satellite data...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+            } else {
+                // Tablo zaten varsa sadece loading mesajını göster
+                const tbody = document.querySelector('#satellite-table tbody');
+                tbody.innerHTML = `
+                    <tr class="loading-row">
+                        <td colspan="5">Loading satellite data...</td>
+                    </tr>
+                `;
+            }
 
             // Fetch data for all GNSS constellations
             const allSatellites = await Promise.all(
@@ -279,14 +309,20 @@ class SatTrackView {
                 });
             });
 
+            // Loading mesajını temizle
+            const loadingRow = document.querySelector('.loading-row');
+            if (loadingRow) {
+                loadingRow.remove();
+            }
+
             this.startSatelliteTracking();
             
         } catch (error) {
             console.error('Error loading GNSS satellite data:', error);
-            const container = document.getElementById('satellite-details');
-            container.innerHTML = `
+            const tbody = document.querySelector('#satellite-table tbody');
+            tbody.innerHTML = `
                 <tr class="error-message">
-                    <td colspan="6">
+                    <td colspan="5">
                         Failed to load GNSS satellite data. 
                         <button onclick="window.satTrackView.loadAllGNSSSatellites()" class="retry-button">
                             Try Again
@@ -436,6 +472,12 @@ class SatTrackView {
         const rowId = `satellite-${satellite.name.replace(/\s+/g, '-')}`;
         let row = document.getElementById(rowId);
 
+        // Loading mesajını temizle
+        const loadingRow = tbody.querySelector('.loading-row');
+        if (loadingRow) {
+            loadingRow.remove();
+        }
+
         if (!row) {
             row = tbody.insertRow();
             row.id = rowId;
@@ -443,7 +485,7 @@ class SatTrackView {
 
         row.className = angles.visible ? 'visible' : 'not-visible';
         row.innerHTML = `
-            <td>
+            <td style="width: 100px;">
                 <span class="status-indicator status-${angles.visible ? 'visible' : 'not-visible'}"></span>
                 ${angles.visible ? 'Visible' : 'Not Visible'}
             </td>
@@ -456,13 +498,6 @@ class SatTrackView {
             <td>${angles.elevation.toFixed(1)}°</td>
             <td>${this.formatAzimuth(angles.azimuth)}</td>
         `;
-
-        // Update error message colspan if needed
-        const noData = document.querySelector('.no-data');
-        if (noData) {
-            noData.querySelector('td').setAttribute('colspan', '5');
-            noData.remove();
-        }
     }
 
     createSatelliteIcon(visible, elevation, constellation) {

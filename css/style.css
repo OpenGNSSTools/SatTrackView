@@ -217,64 +217,50 @@ button:hover {
 
 #satellite-table {
     width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-    background: var(--background-card);
-    border-radius: var(--border-radius);
-    overflow: hidden;
-    box-shadow: var(--shadow);
     table-layout: fixed;
+    border-collapse: collapse;
 }
 
-#satellite-table thead {
-    background-color: var(--background-input);
-}
-
-#satellite-table th {
-    background-color: var(--background-input);
-    color: var(--text-primary);
-    font-weight: 600;
-    padding: 8px 12px;
-    text-align: left;
-    position: sticky;
-    top: 0;
-    z-index: 10;
-    border-bottom: 1px solid var(--border-color);
-    font-size: 0.9rem;
-}
-
+#satellite-table th,
 #satellite-table td {
-    padding: 8px 12px;
+    padding: 8px;
     text-align: left;
-    border-bottom: 1px solid var(--border-color);
-    background-color: var(--background-card);
-    color: var(--text-secondary);
-    font-size: 0.9rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-/* Sütun genişliklerini sabit tut */
+/* Sütun genişliklerini belirleme */
 #satellite-table th:nth-child(1),
-#satellite-table td:nth-child(1) { width: 120px; }
+#satellite-table td:nth-child(1) {
+    width: 100px; /* Status sütunu için sabit genişlik */
+}
 
 #satellite-table th:nth-child(2),
-#satellite-table td:nth-child(2) { width: 220px; }
+#satellite-table td:nth-child(2) {
+    width: 25%; /* Satellite Name sütunu */
+}
 
 #satellite-table th:nth-child(3),
-#satellite-table td:nth-child(3) { width: 140px; }
+#satellite-table td:nth-child(3) {
+    width: 15%; /* Constellation sütunu */
+}
 
 #satellite-table th:nth-child(4),
-#satellite-table td:nth-child(4) { width: 100px; }
+#satellite-table td:nth-child(4) {
+    width: 15%; /* Elevation sütunu */
+}
 
 #satellite-table th:nth-child(5),
-#satellite-table td:nth-child(5) { width: 160px; }
+#satellite-table td:nth-child(5) {
+    width: calc(45% - 100px); /* Azimuth sütunu */
+}
 
 /* Tablo container'ı için yatay kaydırma */
-.info-container {
+.satellite-table-container {
+    width: 100%;
     overflow-x: auto;
-    padding: 0;
-    border-radius: var(--border-radius);
-    background-color: var(--background-card);
-    border: 1px solid var(--border-color);
+    margin-top: 20px;
 }
 
 /* Satır hover efekti */
@@ -294,31 +280,30 @@ button:hover {
     color: var(--beidou-color);
 }
 
-/* Status göstergeleri */
+/* Status göstergesi için düzenleme */
 .status-indicator {
     display: inline-block;
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    margin-right: 8px;
+    margin-right: 6px;
 }
 
-.status-visible { 
-    background-color: var(--gps-color);
+.status-visible {
+    background-color: #4CAF50;
 }
 
-.status-not-visible { 
-    background-color: var(--beidou-color);
+.status-not-visible {
+    background-color: #757575;
 }
 
-/* Constellation badge'leri */
+/* Constellation badge için düzenleme */
 .constellation-badge {
-    padding: 4px 8px;
+    display: inline-block;
+    padding: 2px 6px;
     border-radius: 4px;
     font-size: 0.85em;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+    text-align: center;
 }
 
 .constellation-badge.gps { 
