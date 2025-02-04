@@ -403,33 +403,35 @@ class SatTrackView {
     }
 
     calculateSatelliteVisibility(position, satellitePosition) {
-        // Calculate if satellite is above horizon from observer position
-        const observerLat = position.latitude * (Math.PI / 180);  // Convert to radians
+        const R = 6371; // Earth's radius in km
+        // Convert coordinates to radians
+        const observerLat = position.latitude * (Math.PI / 180);
         const observerLon = position.longitude * (Math.PI / 180);
         const satelliteLat = satellitePosition.latitude * (Math.PI / 180);
         const satelliteLon = satellitePosition.longitude * (Math.PI / 180);
         
-        // Calculate great circle distance
-        const R = 6371; // Earth's radius in km
+        // Compute central angle using the haversine formula (φ)
         const dLat = satelliteLat - observerLat;
         const dLon = satelliteLon - observerLon;
+        const a = Math.pow(Math.sin(dLat/2), 2) + 
+                  Math.cos(observerLat) * Math.cos(satelliteLat) * Math.pow(Math.sin(dLon/2), 2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         
-        const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-                 Math.cos(observerLat) * Math.cos(satelliteLat) *
-                 Math.sin(dLon/2) * Math.sin(dLon/2);
+        // Ground distance along Earth's surface
+        const groundDistance = R * c;
         
-        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-        const distance = R * c;
+        // Find satellite altitude in km
+        const h = satellitePosition.height / 1000;
         
-        // Calculate elevation angle
-        const satelliteHeight = satellitePosition.height / 1000; // Convert to km
-        const elevation = Math.asin((satelliteHeight) / 
-                         Math.sqrt(Math.pow(distance, 2) + Math.pow(satelliteHeight, 2)));
+        // Calculate elevation angle using the spherical Earth model:
+//  e = arctan(((R+h)*sin(c)) / ((R+h)*cos(c) - R))
+        const elevationRad = Math.atan(((R + h) * Math.sin(c)) / ((R + h) * Math.cos(c) - R));
+        const elevationDeg = elevationRad * (180 / Math.PI);
         
         return {
-            visible: elevation > 0,
-            elevation: elevation * (180 / Math.PI), // Convert to degrees
-            distance: distance
+            visible: elevationDeg > 0,
+            elevation: elevationDeg,
+            distance: groundDistance
         };
     }
 
