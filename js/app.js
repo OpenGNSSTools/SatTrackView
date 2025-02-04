@@ -403,62 +403,121 @@ class SatTrackView {
     }
 
     calculateSatelliteVisibility(position, satellitePosition) {
-        const R = 6371; // Earth's radius in km
-        // Convert coordinates to radians
-        const observerLat = position.latitude * (Math.PI / 180);
+        // Calculate if satellite is above horizon from observer position
+        const observerLat = position.latitude * (Math.PI / 180);  // Convert to radians
         const observerLon = position.longitude * (Math.PI / 180);
         const satelliteLat = satellitePosition.latitude * (Math.PI / 180);
         const satelliteLon = satellitePosition.longitude * (Math.PI / 180);
         
-        // Compute central angle using the haversine formula (φ)
+        // Calculate great circle distance
+        const R = 6371; // Earth's radius in km
         const dLat = satelliteLat - observerLat;
         const dLon = satelliteLon - observerLon;
-        const a = Math.pow(Math.sin(dLat/2), 2) + 
-                  Math.cos(observerLat) * Math.cos(satelliteLat) * Math.pow(Math.sin(dLon/2), 2);
-        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         
-        // Ground distance along Earth's surface
-        const groundDistance = R * c;
+        const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                 Math.cos(observerLat) * Math.cos(satelliteLat) *
+                 Math.sin(dLon/2) * Math.sin(dLon/2);
         
-        // Find satellite altitude in km
-        const h = satellitePosition.height / 1000;
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        const distance = R * c;
         
-        // Calculate elevation angle using the spherical Earth model:
-//  e = arctan(((R+h)*sin(c)) / ((R+h)*cos(c) - R))
-        const elevationRad = Math.atan(((R + h) * Math.sin(c)) / ((R + h) * Math.cos(c) - R));
-        const elevationDeg = elevationRad * (180 / Math.PI);
+        // Calculate elevation angle
+        const satelliteHeight = satellitePosition.height / 1000; // Convert to km
+        const elevation = Math.asin((satelliteHeight) / 
+                         Math.sqrt(Math.pow(distance, 2) + Math.pow(satelliteHeight, 2)));
         
         return {
-            visible: elevationDeg > 0,
-            elevation: elevationDeg,
-            distance: groundDistance
+            visible: elevation > 0,
+            elevation: elevation * (180 / Math.PI), // Convert to degrees
+            distance: distance
         };
     }
 
+    calculateSatelliteElevation(observerPosition, satellitePosition) {
+        const R = 6371000; // Dünya yarıçapı (metre)
+        // Observer ve uydu için enlem ve boylamı radyana çevirin
+        const obsLatRad = observerPosition.latitude * (Math.PI / 180);
+        const obsLonRad = observerPosition.longitude * (Math.PI / 180);
+        const satLatRad = satellitePosition.latitude * (Math.PI / 180);
+        const satLonRad = satellitePosition.longitude * (Math.PI / 180);
+
+        // Observer için ECEF koordinatları (varsayılan olarak deniz seviyesinde, h = 0)
+        const obsECEF = {
+            x: R * Math.cos(obsLatRad) * Math.cos(obsLonRad),
+            y: R * Math.cos(obsLatRad) * Math.sin(obsLonRad),
+            z: R * Math.sin(obsLatRad)
+        };
+
+        // Uydu için ECEF koordinatları (h, uydu yüksekliği, metre cinsinden)
+        const satECEF = {
+            x: (R + satellitePosition.height) * Math.cos(satLatRad) * Math.cos(satLonRad),
+            y: (R + satellitePosition.height) * Math.cos(satLatRad) * Math.sin(satLonRad),
+            z: (R + satellitePosition.height) * Math.sin(satLatRad)
+        };
+
+        // Observer'dan uyduya olan vektör
+        const vx = satECEF.x - obsECEF.x;
+        const vy = satECEF.y - obsECEF.y;
+        const vz = satECEF.z - obsECEF.z;
+        const vectorNorm = Math.sqrt(vx * vx + vy * vy + vz * vz);
+
+        // Observer'ın yerel yukarı (Up) birim vektörü: [cos(lat)*cos(lon), cos(lat)*sin(lon), sin(lat)]
+        const upVector = {
+            x: Math.cos(obsLatRad) * Math.cos(obsLonRad),
+            y: Math.cos(obsLatRad) * Math.sin(obsLonRad),
+            z: Math.sin(obsLatRad)
+        };
+
+        // Dot product ve elevation açısı hesaplama
+        const dot = vx * upVector.x + vy * upVector.y + vz * upVector.z;
+        const elevationRad = Math.asin(dot / vectorNorm);
+        return elevationRad * (180 / Math.PI); // Derece cinsinden elevation
+    }
+
     calculateSatelliteAngles(observerPosition, satellitePosition) {
-        // Convert all angles to radians
+        // Azimuth hesaplaması (değişmedi)
         const lat1 = observerPosition.latitude * (Math.PI / 180);
         const lon1 = observerPosition.longitude * (Math.PI / 180);
         const lat2 = satellitePosition.latitude * (Math.PI / 180);
         const lon2 = satellitePosition.longitude * (Math.PI / 180);
 
-        // Calculate azimuth
         const dLon = lon2 - lon1;
         const y = Math.sin(dLon) * Math.cos(lat2);
-        const x = Math.cos(lat1) * Math.sin(lat2) -
-                 Math.sin(lat1) * Math.cos(lat2) * Math.cos(dLon);
+        const x = Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(dLon);
         let azimuth = Math.atan2(y, x);
-        azimuth = azimuth * (180 / Math.PI); // Convert to degrees
-        azimuth = (azimuth + 360) % 360; // Normalize to 0-360
+        azimuth = (azimuth * (180 / Math.PI) + 360) % 360;
 
-        // Get elevation from visibility calculation
-        const visibility = this.calculateSatelliteVisibility(observerPosition, satellitePosition);
+        // Yeni elevation hesaplaması: yukarıdaki yardımcı metodu kullanıyoruz
+        const elevation = this.calculateSatelliteElevation(observerPosition, satellitePosition);
+
+        // Uydu ile gözlemci arasındaki gerçek doğru (çapraz) mesafeyi ECEF fark vektörü üzerinden hesaplayalım
+        const R = 6371000; // Dünya yarıçapı (metre)
+        const obsLatRad = lat1;
+        const obsLonRad = lon1;
+        const satLatRad = satellitePosition.latitude * (Math.PI / 180);
+        const satLonRad = satellitePosition.longitude * (Math.PI / 180);
+
+        const obsECEF = {
+            x: R * Math.cos(obsLatRad) * Math.cos(obsLonRad),
+            y: R * Math.cos(obsLatRad) * Math.sin(obsLonRad),
+            z: R * Math.sin(obsLatRad)
+        };
+        const satECEF = {
+            x: (R + satellitePosition.height) * Math.cos(satLatRad) * Math.cos(satLonRad),
+            y: (R + satellitePosition.height) * Math.cos(satLatRad) * Math.sin(satLonRad),
+            z: (R + satellitePosition.height) * Math.sin(satLatRad)
+        };
+
+        const dx = satECEF.x - obsECEF.x;
+        const dy = satECEF.y - obsECEF.y;
+        const dz = satECEF.z - obsECEF.z;
+        const distance = Math.sqrt(dx * dx + dy * dy + dz * dz) / 1000; // km cinsinden
 
         return {
             azimuth: azimuth,
-            elevation: visibility.elevation,
-            distance: visibility.distance,
-            visible: visibility.visible
+            elevation: elevation,
+            distance: distance,
+            visible: elevation > 0
         };
     }
 
